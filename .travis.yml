@@ -1,4 +1,10 @@
 language: node_js
-services: mongodb
+services: 
+  - postgresql
+addons:
+  postgresql: "9.4"
+before_script:
+  - psql -c 'create database operator_test;' -U postgres
+  - psql -U postgres -c "create extension postgis"
 node_js:
   - "6"

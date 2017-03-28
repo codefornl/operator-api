@@ -1,20 +1,19 @@
+/*!
+ * Service model
+ */
 (function() {
-    var mongoose = require('mongoose');
-    var ObjectId = mongoose.Schema.ObjectId;
-    var Schema = new mongoose.Schema({
-        code: {
-            type: String,
-            required: true,
-            index: {unique: true}
-        },
-        name: {
-            type: String,
-            required: true
-        },
-        url: String,
-        country: String,
-        entered_at: {type: Date, required: true, default: Date}
+  'use strict';
+  module.exports = function(sequelize, DataTypes) {
+    var operator = sequelize.define("operator", {
+      operator_id: DataTypes.STRING,
+      name: DataTypes.STRING,
+      external_id: DataTypes.STRING,
+      is_default: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      }
     });
-    exports.schema = Schema;
-    exports.model = mongoose.model('Operator', Schema);
+    return operator;
+  };
 }());

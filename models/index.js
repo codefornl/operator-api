@@ -1,22 +1,33 @@
-var fs = require('fs');
-var mongoose = require('mongoose');
-var env = process.env.NODE_ENV || 'development';
-var config = require('../config/config.json')[env];
-var db;
-mongoose.Promise = require('bluebird');
-// Connect to mongo
-if (config.use_env_variable) {
-  db = mongoose.connect(process.env[config.use_env_variable]);
-} else {
-  db = mongoose.connect(config.db);
-}
-
-/**
- * initializes all models and sources them as .model-name
- **/
-fs.readdirSync(__dirname).forEach(function(file) {
-  if (file !== 'index.js') {
-    var moduleName = file.split('.')[0];
-    exports[moduleName] = require('./' + moduleName);
+(function () {
+  'use strict';
+  var fs = require("fs");
+  var path = require("path");
+  var Sequelize = require("sequelize");
+  var env = process.env.NODE_ENV || "development";
+  var config;
+  if (!fs.existsSync(__dirname + '/../config/config.json')) {
+      //check to see if config file exists, if not, default to config.default.json
+      config = require(__dirname + '/../config/config.default.json')[env];
+  } else {
+      config = require(__dirname + '/../config/config.json')[env];
   }
-});
+  var sequelize = new Sequelize(config.database, config.username, config.password, config);
+  var db = {};
+  fs
+    .readdirSync(__dirname)
+    .filter(function(file) {
+      return (file.indexOf(".") !== 0) && (file !== "index.js");
+    })
+    .forEach(function(file) {
+      var model = sequelize.import(path.join(__dirname, file));
+      db[model.name] = model;
+    });
+  Object.keys(db).forEach(function(modelName) {
+    if ("associate" in db[modelName]) {
+      db[modelName].associate(db);
+    }
+  });
+  db.sequelize = sequelize;
+  db.Sequelize = Sequelize;
+  module.exports = db;
+}());

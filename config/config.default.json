@@ -1,0 +1,32 @@
+{
+  "development": {
+    "host": "127.0.0.1",
+    "database": "operator_development",
+    "username": "postgres",
+    "password": "",
+    "port": 5432,
+    "dialect": "postgres",
+    "logging": true,
+    "tolerance": 10
+  },
+  "test": {
+    "host": "127.0.0.1",
+    "database": "operator_test",
+    "username": "postgres",
+    "password": "",
+    "port": 5432,
+    "dialect": "postgres",
+    "logging": false,
+    "tolerance": 10
+  },
+  "production": {
+    "host": "127.0.0.1",
+    "database": "operator_production",
+    "username": "postgres",
+    "password": "",
+    "port": 5432,
+    "dialect": "postgres",
+    "logging": false,
+    "tolerance": 10
+  }
+}

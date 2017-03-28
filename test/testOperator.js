@@ -29,7 +29,7 @@ describe('testing /api/operator', function() {
    * Test the /POST Operator route
    */
   describe('GET Operator at coordinate', function() {
-    it('it should return AuthenticationError, No token provided', function(done) {
+    it('it should return a list of operators with distance and type', function(done) {
       chai.request(app)
         .get('/api/operator')
         .end(function(err, res) {
@@ -43,8 +43,8 @@ describe('testing /api/operator', function() {
   /*
    * Test the /POST Operator route
    */
-  describe('POST Operator by address', function() {
-    it('it should return the newly created operator', function(done) {
+  describe('GET Operator by address', function() {
+    it('it should return a list of operators with distance and type', function(done) {
       chai.request(app)
         .get('/api/operator')
         .set('x-access-token', token)

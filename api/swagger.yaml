@@ -14,7 +14,7 @@ schemes:
 #- "https"
 - "http"
 paths:
-  /responsible:
+  /operator:
     get:
       tags:
       - "operator"

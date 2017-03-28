@@ -26,27 +26,6 @@
     // Initialize the Swagger middleware
     swaggerTools.initializeMiddleware(swaggerDoc, function(middleware) {
         // Interpret Swagger resources and attach metadata to request - must be first in swagger-tools middleware chain
-        app.use(function(req, res, next){
-          if(['POST','PUT','DELETE'].indexOf(req.method) > -1){
-            res.setHeader('content-type', 'application/json');
-            // check header or url parameters or post parameters for token
-            var token = req.headers['x-access-token'];
-            // decode token
-            if (token) {
-              //console.log("Real tokens will come later, for now we accept!");
-              req.token = token;
-              next();
-            } else {
-              // if there is no token
-              // return an error
-              res.statusCode = 402;
-              res.end(JSON.stringify({"name": "AuthenticationError", "message": "No token provided"}, null, 2));
-            }
-          } else {
-            next();
-          }
-        });
-
         app.use(middleware.swaggerMetadata());
 
         // Validate Swagger requests

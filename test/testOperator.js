@@ -11,61 +11,44 @@ var models = require('../models');
 chai.use(chaiHttp);
 var should = chai.should();
 
-describe('testing /api/company', function() {
+describe('testing /api/operator', function() {
   var token = "myawesomedummytoken";
 
-  var testcompany = {
+  var testoperator = {
     code: 'wueteria',
     name: 'Wüteria Mineralquellen GmbH & Co. KG',
     url: 'http://wueteria.de',
     country: 'Germany'
   };
 
-  var testuser = {
-    name: "testUser",
-    email: "test@email.com",
-    token: token
-  };
-  var user = new models.User.model(testuser);
-
-  user.save(function (err, user, count) {
-    user = user;
-  });
-
   afterEach(function() {
     // runs after each test in this block
   });
 
   /*
-   * Test the /POST Company route
+   * Test the /POST Operator route
    */
-  describe('POST Company without token', function() {
+  describe('GET Operator at coordinate', function() {
     it('it should return AuthenticationError, No token provided', function(done) {
       chai.request(app)
-        .post('/api/company')
-        .send({})
+        .get('/api/operator')
         .end(function(err, res) {
-          var data = JSON.parse(res.text);
-          should.equal(data.name, 'AuthenticationError');
-          should.equal(data.message, 'No token provided');
-          res.should.have.status(402);
+          console.log(err);
+          res.should.have.status(200);
           done();
         });
     });
   });
+
   /*
-   * Test the /POST Company route
+   * Test the /POST Operator route
    */
-  describe('POST Company with token', function() {
-    it('it should return the newly created company', function(done) {
+  describe('POST Operator by address', function() {
+    it('it should return the newly created operator', function(done) {
       chai.request(app)
-        .post('/api/company')
+        .get('/api/operator')
         .set('x-access-token', token)
-        .send(testcompany)
         .end(function(err, res) {
-          var data = JSON.parse(res.text);
-          res.should.be.json; // jshint ignore:line
-          should.equal(data.code, 'wueteria');
           res.should.have.status(200);
           done();
         });

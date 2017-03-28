@@ -1,0 +1,2 @@
+require("./testSwagger");
+require("./testOperator");

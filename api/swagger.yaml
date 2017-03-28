@@ -1,0 +1,53 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a the API for Getting Operators per City, Area or Coordinate"
+  version: "1.0.0"
+  title: "Operator-api"
+  contact:
+    name: "info@codefor.nl"
+  license:
+    name: "GPL-3.0"
+    url: "https://raw.githubusercontent.com/codefornl/operator-api/master/LICENSE"
+basePath: "/api"
+schemes:
+#- "https"
+- "http"
+paths:
+  /responsible:
+    get:
+      tags:
+      - "operator"
+      summary: "Get responsible operator"
+      description: ""
+      operationId: "getoperator"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Parameters used to locate the operator"
+        required: false
+        schema:
+          $ref: "#/definitions/Query"
+      responses:
+        405:
+          description: "Invalid input"
+      x-swagger-router-controller: "Operator"
+definitions:
+  Query:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      code:
+        type: "string"
+      name:
+        type: "string"
+      url:
+        type: "string"
+      country:
+        type: "string"

@@ -1,0 +1,14 @@
+{
+  "development": {
+    "db": "mongodb://localhost/operator_development",
+    "secret": "developmentrocks"
+  },
+  "test": {
+    "db": "mongodb://localhost/operator_test",
+    "secret": "testingisgood"
+  },
+  "production": {
+    "db": "mongodb://localhost/operator_production",
+    "secret": "changemebeforedeploying!"
+  }
+}

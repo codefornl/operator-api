@@ -13,7 +13,6 @@ var should = chai.should();
 
 describe('testing /api/operator', function() {
   var token = "myawesomedummytoken";
-
   var testoperator = {
     code: 'wueteria',
     name: 'Wüteria Mineralquellen GmbH & Co. KG',
@@ -28,30 +27,84 @@ describe('testing /api/operator', function() {
   /*
    * Test the /POST Operator route
    */
-  describe('GET Operator at coordinate', function() {
-    it('it should return a list of operators with distance and type', function(done) {
+  describe('GET local government by coordinates', function() {
+    it('it should return Vught', function(done) {
       chai.request(app)
         .get('/api/operator')
+        .send({"lat": 51.6362, "lon": 5.2981})
         .end(function(err, res) {
-          console.log(err);
+          var data = JSON.parse(res.text);
+          should.equal(data.operator, 'Vught');
+          should.equal(data.type, 'local government');
+          should.equal(data.country, 'nl');
           res.should.have.status(200);
           done();
         });
     });
   });
 
-  /*
-   * Test the /POST Operator route
-   */
-  describe('GET Operator by address', function() {
-    it('it should return a list of operators with distance and type', function(done) {
+  describe('GET local government by coordinates', function() {
+    it('it should return Eindhoven', function(done) {
       chai.request(app)
         .get('/api/operator')
-        .set('x-access-token', token)
+        .send({"lat": 51.4547, "lon": 5.4212})
         .end(function(err, res) {
+          var data = JSON.parse(res.text);
+          should.equal(data.operator, 'Eindhoven');
+          should.equal(data.type, 'local government');
+          should.equal(data.country, 'nl');
           res.should.have.status(200);
           done();
         });
     });
+  });
+
+  describe('GET local government by address', function() {
+    it('it should return Vught', function(done) {
+      chai.request(app)
+        .get('/api/operator')
+        .send({"q": "beukenlaan 2 vught"})
+        .set('x-access-token', token)
+        .end(function(err, res) {
+          var data = JSON.parse(res.text);
+          should.equal(data.operator, 'Vught');
+          should.equal(data.type, 'local government');
+          should.equal(data.country, 'nl');
+          res.should.have.status(200);
+          done();
+        });
+    });
+  });
+
+  describe('GET local government by address', function() {
+    it('it should return Rotterdam', function(done) {
+      chai.request(app)
+        .get('/api/operator')
+        .send({"q": "Gouwstraat rotterdam"})
+        .set('x-access-token', token)
+        .end(function(err, res) {
+          var data = JSON.parse(res.text);
+          should.equal(data.operator, 'Rotterdam');
+          should.equal(data.country, 'nl');
+          res.should.have.status(200);
+          done();
+        });
+    });
+  });
+});
+
+describe('GET local government by coordinates', function() {
+  it('it should return Eindhoven', function(done) {
+    chai.request(app)
+      .get('/api/operator')
+      .send({"lat": 51.4202, "lon": 5.4976})
+      .end(function(err, res) {
+        var data = JSON.parse(res.text);
+        should.equal(data.operator, 'Eindhoven');
+        should.equal(data.type, 'local government');
+        should.equal(data.country, 'nl');
+        res.should.have.status(200);
+        done();
+      });
   });
 });

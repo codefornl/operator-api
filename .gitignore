@@ -8,3 +8,9 @@ Thumbs.db
 .rvmrc
 *.log
 node_modules
+
+# exclude assets
+assets/*
+# exception to the rule
+!assets/run.sh
+

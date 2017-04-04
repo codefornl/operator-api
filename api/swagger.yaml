@@ -14,40 +14,36 @@ schemes:
 #- "https"
 - "http"
 paths:
-  /operator:
+  /jurisdiction:
     get:
       tags:
-      - "operator"
-      summary: "Get responsible operator"
+      - "jurisdiction"
+      summary: "Get jurisdiction for a given area"
       description: ""
-      operationId: "getoperator"
+      operationId: "getjurisdiction"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Parameters used to locate the operator"
+      - in: "query"
+        name: "q"
+        description: "Search query"
         required: false
-        schema:
-          $ref: "#/definitions/Query"
+        type: "string"
+      - in: "query"
+        name: "lat"
+        description: "Latitude"
+        required: false
+        type: "number"
+        format: "float"
+      - in: "query"
+        name: "lon"
+        description: "Longitude"
+        required: false
+        type: "number"
+        format: "float"
       responses:
         405:
           description: "Invalid input"
-      x-swagger-router-controller: "Operator"
-definitions:
-  Query:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      code:
-        type: "string"
-      name:
-        type: "string"
-      url:
-        type: "string"
-      country:
-        type: "string"
+      x-swagger-router-controller: "Jurisdiction"

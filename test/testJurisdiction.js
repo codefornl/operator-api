@@ -11,9 +11,9 @@ var models = require('../models');
 chai.use(chaiHttp);
 var should = chai.should();
 
-describe('testing /api/operator', function() {
+describe('testing /api/jurisdiction', function() {
   var token = "myawesomedummytoken";
-  var testoperator = {
+  var testjurisdiction = {
     code: 'wueteria',
     name: 'Wüteria Mineralquellen GmbH & Co. KG',
     url: 'http://wueteria.de',
@@ -25,13 +25,16 @@ describe('testing /api/operator', function() {
   });
 
   /*
-   * Test the /POST Operator route
+   * Test the /POST jurisdiction route
    */
   describe('GET local government by coordinates', function() {
     it('it should return Vught', function(done) {
       chai.request(app)
-        .get('/api/operator')
-        .send({"lat": 51.6362, "lon": 5.2981})
+        .get('/api/jurisdiction')
+        .query({
+          "lat": 51.6362,
+          "lon": 5.2981
+        })
         .end(function(err, res) {
           var data = JSON.parse(res.text);
           should.equal(data.jurisdiction, 'Vught');
@@ -46,8 +49,11 @@ describe('testing /api/operator', function() {
   describe('GET local government by coordinates', function() {
     it('it should return Eindhoven', function(done) {
       chai.request(app)
-        .get('/api/operator')
-        .send({"lat": 51.4547, "lon": 5.4212})
+        .get('/api/jurisdiction')
+        .query({
+          "lat": 51.4547,
+          "lon": 5.4212
+        })
         .end(function(err, res) {
           var data = JSON.parse(res.text);
           should.equal(data.jurisdiction, 'Eindhoven');
@@ -62,8 +68,11 @@ describe('testing /api/operator', function() {
   describe('GET local government by coordinates', function() {
     it('it should return Eindhoven', function(done) {
       chai.request(app)
-        .get('/api/operator')
-        .send({"lat": 51.4202, "lon": 5.4976})
+        .get('/api/jurisdiction')
+        .query({
+          "lat": 51.4202,
+          "lon": 5.4976
+        })
         .end(function(err, res) {
           var data = JSON.parse(res.text);
           should.equal(data.jurisdiction, 'Eindhoven');
@@ -78,8 +87,10 @@ describe('testing /api/operator', function() {
   describe('GET local government by address', function() {
     it('it should return Eindhoven', function(done) {
       chai.request(app)
-        .get('/api/operator')
-        .send({"q": "eindhoven"})
+        .get('/api/jurisdiction')
+        .query({
+          "q": "eindhoven"
+        })
         .set('x-access-token', token)
         .end(function(err, res) {
           var data = JSON.parse(res.text);
@@ -95,8 +106,10 @@ describe('testing /api/operator', function() {
   describe('GET local government by address', function() {
     it('it should return Vught', function(done) {
       chai.request(app)
-        .get('/api/operator')
-        .send({"q": "vught"})
+        .get('/api/jurisdiction')
+        .query({
+          "q": "beukenlaan 2 vught"
+        })
         .set('x-access-token', token)
         .end(function(err, res) {
           var data = JSON.parse(res.text);
@@ -112,8 +125,10 @@ describe('testing /api/operator', function() {
   describe('GET local government by address', function() {
     it('it should return Rotterdam', function(done) {
       chai.request(app)
-        .get('/api/operator')
-        .send({"q": "rotterdam"})
+        .get('/api/jurisdiction')
+        .query({
+          "q": "rotterdam"
+        })
         .set('x-access-token', token)
         .end(function(err, res) {
           var data = JSON.parse(res.text);
@@ -128,8 +143,11 @@ describe('testing /api/operator', function() {
   describe('GET local government by coordinates', function() {
     it('it should return Dublin', function(done) {
       chai.request(app)
-        .get('/api/operator')
-        .send({"lat": 53.35457385, "lon": -6.28105931973511})
+        .get('/api/jurisdiction')
+        .query({
+          "lat": 53.35457385,
+          "lon": -6.28105931973511
+        })
         .end(function(err, res) {
           var data = JSON.parse(res.text);
           should.equal(data.jurisdiction, 'Dublin');
@@ -144,8 +162,10 @@ describe('testing /api/operator', function() {
   describe('GET local government by address', function() {
     it('it should return Dublin', function(done) {
       chai.request(app)
-        .get('/api/operator')
-        .send({"q": "dublin"})
+        .get('/api/jurisdiction')
+        .query({
+          "q": "donnybrook close"
+        })
         .set('x-access-token', token)
         .end(function(err, res) {
           var data = JSON.parse(res.text);

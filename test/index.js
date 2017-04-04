@@ -1,2 +1,2 @@
 require("./testSwagger");
-require("./testOperator");
+require("./testJurisdiction");

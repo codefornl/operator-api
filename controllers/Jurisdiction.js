@@ -2,8 +2,8 @@
   'use strict';
   var Nominatim = require('node-nominatim2');
   var nominatim = new Nominatim({
-    useragent: 'codeforeurope-water-api',
-    referer: 'https://github.com/codeforeurope/water-api',
+    useragent: 'codefornl-operator-api',
+    referer: 'https://github.com/codefornl/operator-api',
     timeout: 1000
   });
 

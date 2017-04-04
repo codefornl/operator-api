@@ -10,7 +10,6 @@ Thumbs.db
 node_modules
 
 # exclude assets
-assets/*
+!assets/*.geojson
 # exception to the rule
 !assets/run.sh
-

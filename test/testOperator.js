@@ -76,6 +76,23 @@ describe('testing /api/operator', function() {
   });
 
   describe('GET local government by address', function() {
+    it('it should return Eindhoven', function(done) {
+      chai.request(app)
+        .get('/api/operator')
+        .send({"q": "eindhoven"})
+        .set('x-access-token', token)
+        .end(function(err, res) {
+          var data = JSON.parse(res.text);
+          should.equal(data.jurisdiction, 'Eindhoven');
+          should.equal(data.type, 'local government');
+          should.equal(data.country, 'nl');
+          res.should.have.status(200);
+          done();
+        });
+    });
+  });
+
+  describe('GET local government by address', function() {
     it('it should return Vught', function(done) {
       chai.request(app)
         .get('/api/operator')

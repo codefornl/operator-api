@@ -49,7 +49,9 @@
     var search = function(options, callback){
       // See if we can find a municipality in the database
       // No municipality found? Try nominatim!
-      options.featuretype = "settlement";
+      options.featuretype = "city";
+      options.osm_type = "R";
+      options.zoom = 10;
       nominatim.search(options, function (err, res, data) {
         var result;
         if(data.error){
@@ -64,7 +66,7 @@
     var reverse = function(options, callback){
       // See if we can find a municipality in the database
       // No municipality found? Try nominatim!
-      options.featuretype = "settlement";
+      options.featuretype = "city";
       options.osm_type = "R";
       options.zoom = 10;
       nominatim.reverse(options, function (err, res, data) {

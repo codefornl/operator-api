@@ -34,7 +34,7 @@ describe('testing /api/operator', function() {
         .send({"lat": 51.6362, "lon": 5.2981})
         .end(function(err, res) {
           var data = JSON.parse(res.text);
-          should.equal(data.operator, 'Vught');
+          should.equal(data.jurisdiction, 'Vught');
           should.equal(data.type, 'local government');
           should.equal(data.country, 'nl');
           res.should.have.status(200);
@@ -50,7 +50,23 @@ describe('testing /api/operator', function() {
         .send({"lat": 51.4547, "lon": 5.4212})
         .end(function(err, res) {
           var data = JSON.parse(res.text);
-          should.equal(data.operator, 'Eindhoven');
+          should.equal(data.jurisdiction, 'Eindhoven');
+          should.equal(data.type, 'local government');
+          should.equal(data.country, 'nl');
+          res.should.have.status(200);
+          done();
+        });
+    });
+  });
+
+  describe('GET local government by coordinates', function() {
+    it('it should return Eindhoven', function(done) {
+      chai.request(app)
+        .get('/api/operator')
+        .send({"lat": 51.4202, "lon": 5.4976})
+        .end(function(err, res) {
+          var data = JSON.parse(res.text);
+          should.equal(data.jurisdiction, 'Eindhoven');
           should.equal(data.type, 'local government');
           should.equal(data.country, 'nl');
           res.should.have.status(200);
@@ -63,11 +79,11 @@ describe('testing /api/operator', function() {
     it('it should return Vught', function(done) {
       chai.request(app)
         .get('/api/operator')
-        .send({"q": "beukenlaan 2 vught"})
+        .send({"q": "vught"})
         .set('x-access-token', token)
         .end(function(err, res) {
           var data = JSON.parse(res.text);
-          should.equal(data.operator, 'Vught');
+          should.equal(data.jurisdiction, 'Vught');
           should.equal(data.type, 'local government');
           should.equal(data.country, 'nl');
           res.should.have.status(200);
@@ -80,31 +96,47 @@ describe('testing /api/operator', function() {
     it('it should return Rotterdam', function(done) {
       chai.request(app)
         .get('/api/operator')
-        .send({"q": "Gouwstraat rotterdam"})
+        .send({"q": "rotterdam"})
         .set('x-access-token', token)
         .end(function(err, res) {
           var data = JSON.parse(res.text);
-          should.equal(data.operator, 'Rotterdam');
+          should.equal(data.jurisdiction, 'Rotterdam');
           should.equal(data.country, 'nl');
           res.should.have.status(200);
           done();
         });
     });
   });
-});
 
-describe('GET local government by coordinates', function() {
-  it('it should return Eindhoven', function(done) {
-    chai.request(app)
-      .get('/api/operator')
-      .send({"lat": 51.4202, "lon": 5.4976})
-      .end(function(err, res) {
-        var data = JSON.parse(res.text);
-        should.equal(data.operator, 'Eindhoven');
-        should.equal(data.type, 'local government');
-        should.equal(data.country, 'nl');
-        res.should.have.status(200);
-        done();
-      });
+  describe('GET local government by coordinates', function() {
+    it('it should return Dublin', function(done) {
+      chai.request(app)
+        .get('/api/operator')
+        .send({"lat": 53.35457385, "lon": -6.28105931973511})
+        .end(function(err, res) {
+          var data = JSON.parse(res.text);
+          should.equal(data.jurisdiction, 'Dublin');
+          should.equal(data.type, 'local government');
+          should.equal(data.country, 'ie');
+          res.should.have.status(200);
+          done();
+        });
+    });
+  });
+
+  describe('GET local government by address', function() {
+    it('it should return Dublin', function(done) {
+      chai.request(app)
+        .get('/api/operator')
+        .send({"q": "dublin"})
+        .set('x-access-token', token)
+        .end(function(err, res) {
+          var data = JSON.parse(res.text);
+          should.equal(data.jurisdiction, 'Dublin');
+          should.equal(data.country, 'ie');
+          res.should.have.status(200);
+          done();
+        });
+    });
   });
 });

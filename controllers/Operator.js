@@ -16,31 +16,28 @@
      */
     var clean = function(result){
       var out = {};
+      var osm = {};
       if(Array.isArray(result)){
-        out = result[0].address;
-        if (out.house_number) delete out.house_number;
-        if (out.road) delete out.road;
-        if (out.postcode) delete out.postcode;
-        if(out.country_code === "nl"){
-          return {
-            "operator": out.town || out.city, 
-            "type": "local government", 
-            "country": out.country_code
-          };
-        } else {
-          return out;
-        }
+        // get the relation, skip the nodes.
+        result = result[0];
+      }
         
-      } else if(typeof(result) === "object"){
+      if(typeof(result) === "object"){
         out = result.address;
+        if(result.osm_type && result.osm_id){
+          osm = {type: result.osm_type, id: result.osm_id};
+        } else {
+          osm = {type: "place_id", id: result.place_id};
+        }
         if (out.house_number) delete out.house_number;
         if (out.road) delete out.road;
         if (out.postcode) delete out.postcode;
-        if(out.country_code === "nl"){
+        if(["ie","nl"].indexOf(out.country_code) !== -1){
           return {
-            "operator": out.town || out.city, 
+            "jurisdiction": out.town || out.city, 
             "type": "local government", 
-            "country": out.country_code
+            "country": out.country_code,
+            "osm": osm
           };
         } else {
           return out;
@@ -52,6 +49,7 @@
     var search = function(options, callback){
       // See if we can find a municipality in the database
       // No municipality found? Try nominatim!
+      options.featuretype = "settlement";
       nominatim.search(options, function (err, res, data) {
         var result;
         if(data.error){
@@ -66,6 +64,9 @@
     var reverse = function(options, callback){
       // See if we can find a municipality in the database
       // No municipality found? Try nominatim!
+      options.featuretype = "settlement";
+      options.osm_type = "R";
+      options.zoom = 10;
       nominatim.reverse(options, function (err, res, data) {
         var result;
         if(data.error){

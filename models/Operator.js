@@ -13,6 +13,7 @@
         allowNull: false,
         defaultValue: false
       }
+      // geometry? Dynamics?
     });
     return operator;
   };

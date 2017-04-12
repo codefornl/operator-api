@@ -18,11 +18,29 @@ describe('testing /api/upload', function() {
     // runs after each test in this block
   });
 
-  describe('Post GeoJson File', function() {
+  describe('POST GeoJson File', function() {
     it('it should return ok', function(done) {
       chai.request(app)
         .post('/api/upload')
-        .attach('file', fs.readFileSync('./assets/housingcorporations.geojson'), 'housingcorporations.geojson')
+        .field("table", "corporations_2017") //If not set, generate table name
+        .field("level", 99) // Integer. The higher the integer, the closer to the ground. Can be used to set a hierarchy.
+        .field("name_column", "WONINGCORP") //Should fail if not set
+        .attach('file', fs.readFileSync('./assets/featurecollection.geojson'), 'featurecollection.geojson')
+        .end(function(err, res) {
+          var data = JSON.parse(res.text);
+          res.should.have.status(200);
+          done();
+        });
+    });
+  });
+
+  describe('POST GeoJson File generate tablename', function() {
+    it('it should return ok', function(done) {
+      chai.request(app)
+        .post('/api/upload')
+        .field("level", 99) // Integer. The higher the integer, the closer to the ground. Can be used to set a hierarchy.
+        .field("name_column", "WONINGCORP") //Should fail if not set
+        .attach('file', fs.readFileSync('./assets/feature.geojson'), 'feature.geojson')
         .end(function(err, res) {
           var data = JSON.parse(res.text);
           res.should.have.status(200);

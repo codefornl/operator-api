@@ -37,15 +37,13 @@
         // Serve the Swagger documents and Swagger UI
         app.use(middleware.swaggerUi());
         app.use(function onerror(err, req, res, next) {
+        
           // an error occurred!
           res.setHeader('content-type', 'application/json');
-          // result = {
-          //     "code": e.code || 400,
-          //     "message": e.name + " -- " + e.message,
-          //     "fields": e.fields || null
-          //   };
           res.statusCode = err.code || 400;
+          console.log(err.message);
           res.end(JSON.stringify({"name": err.name, "message":err.message}, null, 2));
+          
         });
     });
     module.exports = app;

@@ -8,7 +8,7 @@ Thumbs.db
 .rvmrc
 *.log
 node_modules
-
+assets/*.zip
 # exclude assets
 !assets/*.geojson
 # exception to the rule

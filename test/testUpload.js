@@ -22,6 +22,7 @@ describe('testing /api/upload', function() {
     it('it should return ok', function(done) {
       chai.request(app)
         .post('/api/upload')
+        .field("action", "replace")
         .field("table", "corporations_2017") //If not set, generate table name
         .field("level", 99) // Integer. The higher the integer, the closer to the ground. Can be used to set a hierarchy.
         .field("name_column", "WONINGCORP") //Should fail if not set
@@ -38,6 +39,7 @@ describe('testing /api/upload', function() {
     it('it should return ok', function(done) {
       chai.request(app)
         .post('/api/upload')
+        .field("action", "replace")
         .field("level", 99) // Integer. The higher the integer, the closer to the ground. Can be used to set a hierarchy.
         .field("name_column", "WONINGCORP") //Should fail if not set
         .attach('file', fs.readFileSync('./assets/feature.geojson'), 'feature.geojson')

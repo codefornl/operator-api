@@ -39,8 +39,11 @@
           freezeTableName: true,
           tableName: req.swagger.params.table.value || Moniker.choose()
         });
-
-        tempmodel.sync().then(function() {
+        var option = { force: false };
+        if(req.swagger.params.action || req.swagger.params.action.value === "replace"){
+          option = {force: true };
+        }
+        tempmodel.sync(option).then(function() {
           if (tmp.type === 'FeatureCollection'){
             //each features
             var inserts = [];

@@ -55,7 +55,8 @@
             tempmodel.bulkCreate(inserts,{
               returning: true
             }).then(function(result) {
-              res.end(JSON.stringify(result, null, 2));
+              console.log(result);
+              res.end(JSON.stringify({"status":"ok"}, null, 2));
             }).catch(function(err) {
               next(err);
             });
@@ -63,9 +64,6 @@
             // Invalid GeoJSON
             next(new Error('No FeatureCollection, but we should not be here!'));
           }
-        }).then(function(error) {
-          // whooops
-          next(error);
         });
 
       } else {

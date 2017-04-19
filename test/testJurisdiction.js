@@ -71,7 +71,9 @@ describe('testing /api/jurisdiction', function() {
         .get('/api/jurisdiction')
         .query({
           "lat": 51.4202,
-          "lon": 5.4976
+          "lon": 5.4976,
+          "catalog_id": "open311-ehv",
+          "category": "1"
         })
         .end(function(err, res) {
           var data = JSON.parse(res.text);
@@ -83,6 +85,67 @@ describe('testing /api/jurisdiction', function() {
         });
     });
   });
+
+  describe('GET corporation by coordinates', function() {
+    it('it should return TESTCORP1', function(done) {
+      chai.request(app)
+        .get('/api/jurisdiction')
+        .query({
+          "lat": 51.4559,
+          "lon": 5.4320,
+          "catalog_id": "open311-ehv",
+          "category": "1"
+        })
+        .end(function(err, res) {
+          var data = JSON.parse(res.text);
+          should.equal(data.jurisdiction, 'TESTCORP1');
+          should.equal(data.type, 'corporations_2017');
+          res.should.have.status(200);
+          done();
+        });
+    });
+  });
+    describe('GET corporation by coordinates', function() {
+    it('it should return TESTCORP2', function(done) {
+      chai.request(app)
+        .get('/api/jurisdiction')
+        .query({
+          "lat": 51.4293,
+          "lon": 5.4933,
+          "catalog_id": "open311-ehv",
+          "category": "1"
+        })
+        .end(function(err, res) {
+          var data = JSON.parse(res.text);
+          should.equal(data.jurisdiction, 'TESTCORP2');
+          should.equal(data.type, 'corporations_2017');
+          res.should.have.status(200);
+          done();
+        });
+    });
+  });
+    describe('GET corporation by coordinates', function() {
+    it('it should return TESTCORP3', function(done) {
+      chai.request(app)
+        .get('/api/jurisdiction')
+        .query({
+          "lat": 51.4266,
+          "lon": 5.4381,
+          "catalog_id": "open311-ehv",
+          "category": "1"
+        })
+        .end(function(err, res) {
+          var data = JSON.parse(res.text);
+          should.equal(data.jurisdiction, 'TESTCORP3');
+          should.equal(data.type, 'corporations_2017');
+          res.should.have.status(200);
+          done();
+        });
+    });
+  });
+  //select * from corporations_2017 WHERE ST_Within(ST_GeomFromText('POINT( 5.4320 51.4559 )',4326),the_geom);
+  //select * from corporations_2017 WHERE ST_Within(ST_GeomFromText('POINT( 5.4381 51.4266 )',4326),the_geom);
+  //select * from corporations_2017 WHERE ST_Within(ST_GeomFromText('POINT( 5.4933 51.4293 )',4326),the_geom);
 
   describe('GET local government by address', function() {
     it('it should return Eindhoven', function(done) {

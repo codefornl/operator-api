@@ -7,6 +7,8 @@
     timeout: 1000
   });
 
+  var models = require('../models');
+
   var getLatLon = function(result){
     var out = {};
     if (Array.isArray(result)) {
@@ -112,13 +114,61 @@
         res.end(JSON.stringify(data, null, 2));
       });
     } else if (params.lat.value && params.lon.value) {
-      reverse({
-        lat: params.lat.value,
-        lon: params.lon.value
-      }, function(err, data) {
-        if (err) next(err);
-        res.end(JSON.stringify(data, null, 2));
-      });
+      if(params.category.value && params.catalog_id.value) {
+        //Lookup tables and try to find hits.
+        var searchparams = {
+          _id: params.category.value.toLowerCase(),
+          _catalog: params.catalog_id.value.toLowerCase()
+        };
+        // Find the tables that need to be queried
+        models.catalog.findAll({
+          where: {
+            catalog_id: searchparams._catalog,
+            categories: {
+              $contains: [searchparams._id]
+            }
+          },
+          attributes: ['name'],
+          raw : true
+        }).then(function(result){
+          var tablename = result[0].name;
+          models.sequelize
+            .query("select name, external_id from " + 
+              tablename + 
+              " WHERE ST_Within(ST_GeomFromText('POINT( " +
+              params.lon.value + 
+              " " + 
+              params.lat.value + 
+              " )',4326),the_geom)",
+              {
+                type: models.sequelize.QueryTypes.SELECT
+            }).then(function(result){
+              if(result.length > 0){
+                var out = {
+                  "jurisdiction": result[0].name,
+                  "type": tablename
+                }
+                res.end(JSON.stringify(out, null, 2));
+              } else {
+                reverse({
+                  lat: params.lat.value,
+                  lon: params.lon.value
+                }, function(err, data) {
+                  if (err) next(err);
+                  res.end(JSON.stringify(data, null, 2));
+                });
+              }
+            });
+        })
+      } else {
+        reverse({
+          lat: params.lat.value,
+          lon: params.lon.value
+        }, function(err, data) {
+          if (err) next(err);
+          res.end(JSON.stringify(data, null, 2));
+        });
+      }
     } else {
       next(new Error('Please add q= or a lat= and lon= to the get request'));
     }

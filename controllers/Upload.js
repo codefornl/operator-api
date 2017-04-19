@@ -5,6 +5,7 @@
   var GeoJSON = require('../helpers/geojson.js');
   var Sequelize = require("sequelize");
   var env = process.env.NODE_ENV || "development";
+  var models = require('../models');
   var config;
 
   /**
@@ -22,6 +23,13 @@
             req.swagger.params.file.value.buffer.toString()
           )
         );
+        var tablename = req.swagger.params.table.value || Moniker.choose();
+        var level =  req.swagger.params.level.value || 1;
+        var categories =  req.swagger.params.categories.value || [];
+        var catalog_id =  req.swagger.params.catalog_id.value || null;
+        if (catalog_id) {
+          catalog_id = catalog_id.toLowerCase();
+        }
         if (!fs.existsSync(__dirname + '/../config/config.json')) {
           //check to see if config file exists, if not, default to config.default.json
           config = require(__dirname + '/../config/config.default.json')[env];
@@ -37,7 +45,7 @@
           the_geom: Sequelize.GEOMETRY('GEOMETRY',4326)
         }, {
           freezeTableName: true,
-          tableName: req.swagger.params.table.value || Moniker.choose()
+          tableName: tablename
         });
         var option = { force: false };
         if(req.swagger.params.action || req.swagger.params.action.value === "replace"){
@@ -58,8 +66,28 @@
             tempmodel.bulkCreate(inserts,{
               returning: true
             }).then(function(result) {
-              console.log(result);
-              res.end(JSON.stringify({"status":"ok"}, null, 2));
+              // Insert meta information
+              var catalog = {
+                "catalog_id": null,
+                "name": tablename,
+                "level": level,
+                "categories": categories,
+                "catalog_id": catalog_id
+              };
+              models.catalog.sync().then(function(){
+                models.catalog.findOne({ where: {name: tablename} }).then(function(result){
+                  if (result) {
+                    result.updateAttributes(catalog).then(function(){
+                      res.end(JSON.stringify({"status":"ok"}, null, 2));
+                    });
+                  } else {
+                    // Author does not exist...
+                    models.catalog.create(catalog).then(function(result){
+                      res.end(JSON.stringify({"status":"ok"}, null, 2));
+                    });
+                  }
+                })
+              });
             }).catch(function(err) {
               next(err);
             });

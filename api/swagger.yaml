@@ -34,6 +34,10 @@ paths:
           in: "formData"
           type: "string"
           description: "If not set, generates table name"
+        - name: "catalog_id" 
+          in: "formData"
+          type: "string"
+          description: "External identifier for the catalog"
         - name: "level"
           in: "formData"
           type: "number"
@@ -56,6 +60,12 @@ paths:
           enum: 
           - append
           - replace
+        - name: "categories"
+          in: "formData"
+          type: "array"
+          description: "categories from the calling source that should be met to return values from this table"
+          items:
+            type: string
       responses:
         405:
           description: "Invalid input"
@@ -90,6 +100,16 @@ paths:
         required: false
         type: "number"
         format: "float"
+      - in: "query"
+        name: "category"
+        description: "(optional) id of the category from the given external catalog to match against"
+        required: false
+        type: "string"
+      - in: "query"
+        name: "catalog_id"
+        description: "(optional) id/name of the catalog the query should match against"
+        required: false
+        type: "string"
       responses:
         405:
           description: "Invalid input"

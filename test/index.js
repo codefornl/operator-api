@@ -1,3 +1,3 @@
 require("./testSwagger");
-require("./testJurisdiction");
 require("./testUpload");
+require("./testJurisdiction");

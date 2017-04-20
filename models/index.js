@@ -11,6 +11,10 @@
   } else {
       config = require(__dirname + '/../config/config.json')[env];
   }
+  if(config.logging === true){
+    config.logging = console.log;
+  }
+  
   var sequelize = new Sequelize(config.database, config.username, config.password, config);
   var db = {};
   fs

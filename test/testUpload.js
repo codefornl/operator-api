@@ -58,4 +58,22 @@ describe('testing /api/upload', function() {
         });
     });
   });
+
+  describe('POST GeoJson File generate tablename', function() {
+    it('it should return ok', function(done) {
+      chai.request(app)
+        .post('/api/upload')
+        .field("action", "replace")
+        .field("level", 13) // Integer. The higher the integer, the closer to the ground. Can be used to set a hierarchy.
+        .field("name_column", "SOMEKEY") //Should fail if not set
+        .field("catalog_id", "open311-ehv")
+        .field("categories[]", "2")
+        .attach('file', fs.readFileSync('./assets/featurecollection2.geojson'), 'featurecollection2.geojson')
+        .end(function(err, res) {
+          var data = JSON.parse(res.text);
+          res.should.have.status(200);
+          done();
+        });
+    });
+  });
 });

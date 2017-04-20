@@ -132,7 +132,7 @@ describe('testing /api/jurisdiction', function() {
           "lat": 51.4266,
           "lon": 5.4381,
           "catalog_id": "open311-ehv",
-          "category": "1"
+          "category": "2"
         })
         .end(function(err, res) {
           var data = JSON.parse(res.text);

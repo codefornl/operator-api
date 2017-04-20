@@ -128,25 +128,36 @@
               $contains: [searchparams._id]
             }
           },
-          attributes: ['name'],
+          attributes: ['name', 'level'],
           raw : true
         }).then(function(result){
-          var tablename = result[0].name;
-          models.sequelize
-            .query("select name, external_id from " + 
+          //Did we receive tables?
+          var query = [];
+          for (var i = 0; i < result.length; i++) {
+            var tablename = result[i].name;
+            var level = result[i].level;
+            query.push("select name, external_id, " +
+              level + "::integer as level, '" +
+              tablename + "'::varchar as source from \"" + 
               tablename + 
-              " WHERE ST_Within(ST_GeomFromText('POINT( " +
+              "\" WHERE ST_Within(ST_GeomFromText('POINT( " +
               params.lon.value + 
               " " + 
               params.lat.value + 
-              " )',4326),the_geom)",
+              " )',4326),the_geom)");
+          }
+          
+          var finalquery = "SELECT * FROM (" + query.join(" UNION ") + ") a order by a.level asc";
+          if (finalquery !== ""){
+          models.sequelize
+            .query(finalquery,
               {
                 type: models.sequelize.QueryTypes.SELECT
-            }).then(function(result){
-              if(result.length > 0){
+            }).then(function(matches){
+              if(matches.length > 0){
                 var out = {
-                  "jurisdiction": result[0].name,
-                  "type": tablename
+                  "jurisdiction": matches[0].name,
+                  "type": matches[0].source
                 }
                 res.end(JSON.stringify(out, null, 2));
               } else {
@@ -159,6 +170,15 @@
                 });
               }
             });
+          } else {
+            reverse({
+              lat: params.lat.value,
+              lon: params.lon.value
+            }, function(err, data) {
+              if (err) next(err);
+              res.end(JSON.stringify(data, null, 2));
+            });    
+          }
         })
       } else {
         reverse({

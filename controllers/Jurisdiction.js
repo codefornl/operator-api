@@ -130,7 +130,8 @@
           },
           attributes: ['name', 'level'],
           raw : true
-        }).then(function(result){
+        }).then(function(result) {
+          if(result.length > 0){
           //Did we receive tables?
           var query = [];
           for (var i = 0; i < result.length; i++) {
@@ -179,7 +180,16 @@
               res.end(JSON.stringify(data, null, 2));
             });    
           }
-        })
+        } else {
+          reverse({
+              lat: params.lat.value,
+              lon: params.lon.value
+            }, function(err, data) {
+              if (err) next(err);
+              res.end(JSON.stringify(data, null, 2));
+            }); 
+        }
+      })
       } else {
         reverse({
           lat: params.lat.value,

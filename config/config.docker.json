@@ -1,0 +1,12 @@
+{
+  "__NODE_ENV__": {
+    "host": "__DATABASE_HOST__",
+    "database": "__DATABASE_NAME__",
+    "username": "__DATABASE_USER__",
+    "password": "__DATABASE_PASSWORD__",
+    "port": __DATABASE_PORT__,
+    "dialect": "postgres",
+    "logging": false,
+    "tolerance": 10
+  }
+}

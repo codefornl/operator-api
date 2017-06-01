@@ -96,7 +96,7 @@
     options.zoom = 10;
     nominatim.reverse(options, function(err, res, data) {
       var result;
-      if (data.error) {
+      if (data && data.error) {
         err = new Error(data.error);
       } else {
         result = clean(data);
@@ -139,15 +139,15 @@
             var level = result[i].level;
             query.push("select name, external_id, " +
               level + "::integer as level, '" +
-              tablename + "'::varchar as source from \"" + 
-              tablename + 
+              tablename + "'::varchar as source from \"" +
+              tablename +
               "\" WHERE ST_Within(ST_GeomFromText('POINT( " +
-              params.lon.value + 
-              " " + 
-              params.lat.value + 
+              params.lon.value +
+              " " +
+              params.lat.value +
               " )',4326),the_geom)");
           }
-          
+
           var finalquery = "SELECT * FROM (" + query.join(" UNION ") + ") a order by a.level asc";
           if (finalquery !== ""){
           models.sequelize
@@ -159,7 +159,7 @@
                 var out = {
                   "jurisdiction": matches[0].name,
                   "type": matches[0].source
-                }
+                };
                 res.end(JSON.stringify(out, null, 2));
               } else {
                 reverse({
@@ -178,7 +178,7 @@
             }, function(err, data) {
               if (err) next(err);
               res.end(JSON.stringify(data, null, 2));
-            });    
+            });
           }
         } else {
           reverse({
@@ -187,9 +187,9 @@
             }, function(err, data) {
               if (err) next(err);
               res.end(JSON.stringify(data, null, 2));
-            }); 
+            });
         }
-      })
+      });
       } else {
         reverse({
           lat: params.lat.value,
